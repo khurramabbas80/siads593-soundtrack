@@ -12,11 +12,18 @@ __pycache__/
 venv/
 env/
 
-# Large data files (re-download or generate locally)
-pipeline/
-*.csv
+# Large binary / archive files
 *.json
 *.zip
+
+# Pipeline files >100MB (GitHub hard limit) — regenerate by running the pipeline scripts
+pipeline/4.5.Wide_join_everything.csv
+pipeline/4.2.Wide_lastfm_appended.csv
+pipeline/4.4.Wide_rapid_api_pull.csv
+pipeline/4.1.1.Wide_awards_appended.csv
+pipeline/3.7.Wide_composer_analysis.csv
+pipeline/3.6.Wide_vote_count_analysis.csv
+pipeline/3.5.Wide_exploded_genre.csv
 
 # Jupyter artifacts
 .ipynb_checkpoints/
