@@ -1,0 +1,27 @@
+# Credentials & secrets
+.env
+*.env
+secrets.toml
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Large data files (re-download or generate locally)
+pipeline/
+*.csv
+*.json
+*.zip
+
+# Jupyter artifacts
+.ipynb_checkpoints/
+*.ipynb
+
+# OS
+.DS_Store
+Thumbs.db
