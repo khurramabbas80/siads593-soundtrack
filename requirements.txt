@@ -1,7 +1,7 @@
 streamlit>=1.35
 pandas
 numpy
-altair<6
+altair>=5.0,<5.3
 matplotlib
 plotly
 scipy
