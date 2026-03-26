@@ -8,6 +8,12 @@ st.set_page_config(page_title="3.7 Composer Analysis", layout="wide")
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 # Standard library imports
 import re
@@ -18,9 +24,9 @@ import pandas as pd
 
 # LOAD THE DATA
 # We are loading the three main files needed for the analysis
-df_albums = pd.read_csv('/work/pipeline/3.6.Albums_vote_count_analysis.csv')
-df_bridge = pd.read_csv('/work/pipeline/2.2.MUSICBRAINZ_mv_tmdb_soundtrack_album_artist_bridge_2015_2025.csv')
-df_wide   = pd.read_csv('/work/pipeline/3.6.Wide_vote_count_analysis.csv')
+df_albums = pd.read_csv('./pipeline/3.6.Albums_vote_count_analysis.csv')
+df_bridge = pd.read_csv('./pipeline/2.2.MUSICBRAINZ_mv_tmdb_soundtrack_album_artist_bridge_2015_2025.csv')
+df_wide   = pd.read_csv('./pipeline/3.6.Wide_vote_count_analysis.csv')
 
 # 1. --- DATA QUALITY ANALYSIS ---
 
@@ -134,8 +140,8 @@ df_wide = pd.merge(
 )
 
 # 6. SAVE EVERYTHING
-df_albums.to_csv('/work/pipeline/3.7.Albums_composer_analysis.csv', index=False)
-df_wide.to_csv('/work/pipeline/3.7.Wide_composer_analysis.csv', index=False)
+df_albums.to_csv('./pipeline/3.7.Albums_composer_analysis.csv', index=False)
+df_wide.to_csv('./pipeline/3.7.Wide_composer_analysis.csv', index=False)
 
 print("Process Complete! Files saved with the 'composer_primary_clean' column.")
 

@@ -8,6 +8,12 @@ st.set_page_config(page_title="3.5 Derive album genre and age columns", layout="
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 st.markdown("""
 # I\\. Setup and Album Title Inspection
@@ -72,7 +78,8 @@ print(f"Neither null: {neither_na}: {neither_na/len(album_df):.3f}")
 
 
 st.markdown("""
-Findings: 14% of rg\\_tags\\_text have values where Release has not, and 5\\.5% populate both\\. Therefore, it makes sense to treat rg\\_tags\\_text as the primary source for tags\\. However, about 2% of albums contain release tags but no rg\\_tags, so combining both may provide some marginal value\\. 
+Findings: 14% of rg\\_tags\\_text have values where Release has not, and 5\\.5% populate both\\. 
+Therefore, it makes sense to treat rg\\_tags\\_text as the primary source for tags\\. However, about 2% of albums contain release tags but no rg\\_tags, so combining both may provide some marginal value\\. 
 """)
 
 album_df['label_tags_text'].value_counts()

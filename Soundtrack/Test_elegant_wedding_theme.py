@@ -8,6 +8,12 @@ st.set_page_config(page_title="Test_elegant_wedding_theme", layout="wide")
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 # Any visualization using our team_theme
 import altair as alt

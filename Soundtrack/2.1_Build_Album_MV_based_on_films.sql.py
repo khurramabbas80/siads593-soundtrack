@@ -8,21 +8,30 @@ st.set_page_config(page_title="2.1 Build_Album_MV_based_on_films.sql", layout="w
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 st.markdown("""
 # Documentation\\-Only SQL Artifact
 """)
 
 st.markdown("""
-This notebook contains a verbatim copy of the SQL script \\`Build\\_Album\\_MV\\_based\\_on\\_films\\.sql\\` for transparency and review\\.
+This notebook contains a verbatim copy of the SQL script 
+\\`Build\\_Album\\_MV\\_based\\_on\\_films\\.sql\\` for transparency and review\\.
 """)
 
 st.markdown("""
-It is provided for reproducibility documentation only and should not be executed within the notebook runtime\\.
+It is provided for reproducibility documentation only and should 
+not be executed within the notebook runtime\\.
 """)
 
 st.markdown("""
-Materialized view creation must occur in the canonical Postgres database environment to preserve schema integrity and QA controls then exported in a CSV, which is then read in by notebooks 3\\.1 and 3\\.2
+Materialized view creation must occur in the canonical Postgres database environment to preserve schema integrity and QA controls then exported in a CSV, which is then read in by notebooks 3\\.1 and 3\\.2
+
 """)
 
 st.markdown("""

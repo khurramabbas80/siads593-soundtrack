@@ -8,6 +8,12 @@ st.set_page_config(page_title="5.4c Statistical analysis of track listener data"
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 st.markdown("""
 # I\\. Setup and Inspection
@@ -45,7 +51,7 @@ enable()    # You need to enable the theme in order for it to work
 alt.data_transformers.disable_max_rows()
 
 # Load the dataframes
-tracks_clean_df = pd.read_csv("/work/pipeline/5.4.b.Tracks_tempo_composer_clean.csv")
+tracks_clean_df = pd.read_csv("./pipeline/5.4.b.Tracks_tempo_composer_clean.csv")
 
 print(f"Total records in tracks_df: {tracks_clean_df.shape[0]}")
 print(tracks_clean_df.columns)

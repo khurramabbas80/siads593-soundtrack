@@ -8,6 +8,12 @@ st.set_page_config(page_title="4.1 Awards Data Scraper", layout="wide")
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 # Third-party imports
 import requests
@@ -161,5 +167,5 @@ if __name__ == "__main__":
     master_df = master_df.sort_values(by=['Year', 'Ceremony', 'Category'], ascending=[False, True, True])
 
     # Save to a single CSV file
-    master_df.to_csv("/work/pipeline/4.1.All_Awards_2015_2025.csv", index=False, quoting=1)
+    master_df.to_csv("./pipeline/4.1.All_Awards_2015_2025.csv", index=False, quoting=1)
     print(f"\nDone! Saved {len(master_df)} records to '4.1.All_Awards_2015_2025.csv'.")

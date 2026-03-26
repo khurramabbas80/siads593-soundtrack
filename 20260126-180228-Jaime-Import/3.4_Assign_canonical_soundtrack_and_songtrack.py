@@ -8,6 +8,12 @@ st.set_page_config(page_title="3.4 Assign canonical soundtrack and songtrack", l
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 st.markdown("""
 # I\\. Setup and Album Title Inspection
@@ -384,7 +390,8 @@ soundtrack_append = base_find_canon.loc[:, [
 st.write(soundtrack_append.head(25))
 
 st.markdown("""
-There really shouldn't be any dupes across the composite key of \\(tmdb\\_id, release\\_group\\_mbid\\),
+There really shouldn't be any dupes across the composite key of \\(tmdb\\_id, release\\_group\\_mbid\\),
+
 but just in case \\-\\- let's validate\\.
 """)
 
@@ -683,7 +690,10 @@ print("Films w/ >1 canonical soundtrack album:", (canon_album_ct_by_film > 1).su
 
 
 st.markdown("""
-Finding: All films that appear in the wide table resolve cleanly to exactly one canonical soundtrack album\\. This confirms that the canonicalization logic held up when expanded to the track level, with no remaining multi\\-album ambiguity after the final safety pass\\.
+Finding: All films that appear in the wide table resolve cleanly to exactly one
+ canonical soundtrack album\\. This confirms that the canonicalization logic held up when expanded to the track level, with no remaining multi\\-album
+ ambiguity after the final safety pass\\.
+
 """)
 
 st.markdown("""

@@ -8,10 +8,16 @@ st.set_page_config(page_title="3.5.1 Derive Film Genre Columns", layout="wide")
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 import pandas as pd
 
-filepath = '/work/pipeline/3.5.Wide_exploded_genre.csv'
+filepath = './pipeline/3.5.Wide_exploded_genre.csv'
 df = pd.read_csv(filepath)
 df.head()
 
@@ -43,7 +49,7 @@ for genre in sorted_genres:
 df.head()
 
 # Save the result to a new CSV file
-output_file = '/work/pipeline/3.5.Wide_exploded_genre.csv'
+output_file = './pipeline/3.5.Wide_exploded_genre.csv'
 df.to_csv(output_file, index=False)
 
 print(f"Transformation complete. Saved to {output_file}")

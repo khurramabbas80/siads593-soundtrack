@@ -8,6 +8,12 @@ st.set_page_config(page_title="4.3 Spotify API Pull", layout="wide")
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 # Standard library imports
 import os
@@ -25,7 +31,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 # Import the CSV from the last stage of the pipeline
 
-filepath = '/work/pipeline/3.7.Wide_composer_analysis.csv'
+filepath = './pipeline/3.7.Wide_composer_analysis.csv'
 df = pd.read_csv(filepath)
 df.head()
 
@@ -476,13 +482,13 @@ print(f"After merging both runs into the wide dataframe, there are {num_rows_spo
 
 # Save wide file to CSV
 
-out_path = "/work/pipeline/4.3.Wide_spotify_ids.csv"
+out_path = "./pipeline/4.3.Wide_spotify_ids.csv"
 
 second_run_merged_df.to_csv(out_path, index=False)
 
 # Check track file
 
-filepath = '/work/pipeline/3.7.Tracks_composer_analysis.csv'
+filepath = './pipeline/3.7.Tracks_composer_analysis.csv'
 df_track = pd.read_csv(filepath)
 
 print(f"Number of records in track file before merge: {len(df_track)}")
@@ -521,7 +527,7 @@ df_track_with_ids.head()
 
 # Save track file to CSV
 
-out_path = "/work/pipeline/4.3.Tracks_spotify_ids.csv"
+out_path = "./pipeline/4.3.Tracks_spotify_ids.csv"
 
 df_track_with_ids.to_csv(out_path, index=False)
 

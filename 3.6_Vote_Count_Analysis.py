@@ -8,6 +8,12 @@ st.set_page_config(page_title="3.6 Vote Count Analysis", layout="wide")
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 st.markdown("""
 Due to significant slowdowns with the Soundnet API, we prioritized films with a vote count greater than or equal to 500\\. In this notebook, we perform analysis on well\\-known composers \\(e\\.g\\., John Williams, Hans Zimmer\\) to ensure that this filter isn't too restrictive\\. We also inspect a sample of excluded films as a sanity check\\. Finally, we create a column to flag records greater than or equal to 500 votes for reference in downstream notebooks\\.
@@ -16,7 +22,7 @@ Due to significant slowdowns with the Soundnet API, we prioritized films with a 
 # Third-party imports
 import pandas as pd
 
-filepath = '/work/pipeline/3.5.Wide_exploded_genre.csv'
+filepath = './pipeline/3.5.Wide_exploded_genre.csv'
 df = pd.read_csv(filepath)
 df.head()
 
@@ -242,7 +248,7 @@ df.to_csv(out_path, index=False)
 
 # Adding vote count flag to the album CSV
 
-filepath = '/work/pipeline/3.5.Albums_exploded_genre.csv'
+filepath = './pipeline/3.5.Albums_exploded_genre.csv'
 df = pd.read_csv(filepath)
 df['vote_count_above_500'] = df['film_vote_count'] >= 500
 

@@ -8,6 +8,12 @@ st.set_page_config(page_title="5.3 Album-track popularity analysis", layout="wid
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 import pandas as pd
 import numpy as np
@@ -62,8 +68,10 @@ We examine how soundtrack popularity is distributed at the album level to unders
 """)
 
 st.markdown("""
-Question: How is listening distributed across soundtrack albums?
-Visualization: Side\\-by\\-side boxplot and violin plot of log album listeners\\.
+Question: How is listening distributed across soundtrack albums?
+
+Visualization: Side\\-by\\-side boxplot and violin plot of log album listeners\\.
+
 """)
 
 source = albums_df[['log_lfm_album_listeners']]
@@ -111,8 +119,10 @@ We explore whether soundtrack albums associated with different musical styles ex
 """)
 
 st.markdown("""
-Question: Do soundtrack albums associated with different musical styles show different popularity profiles?
-Visualization: Small\\-multiple boxplots of log album listeners by genre flag \\(e\\.g\\., pop, electronic, classical/orchestral\\)\\.
+Question: Do soundtrack albums associated with different musical styles show different popularity profiles?
+
+Visualization: Small\\-multiple boxplots of log album listeners by genre flag \\(e\\.g\\., pop, electronic, classical/orchestral\\)\\.
+
 """)
 
 st.markdown("""
@@ -476,8 +486,10 @@ We summarize album popularity at the composer level to explore how composers dif
 """)
 
 st.markdown("""
-Question: Do composers differ more by how many soundtrack albums they release, or by how popular those albums tend to be?
-Visualization: Scatterplot with x = number of soundtrack albums per composer and y = median log album listeners per composer\\.
+Question: Do composers differ more by how many soundtrack albums they release, or by how popular those albums tend to be?
+
+Visualization: Scatterplot with x = number of soundtrack albums per composer and y = median log album listeners per composer\\.
+
 """)
 
 print(albums_df['composer_primary_clean'].nunique())
@@ -723,8 +735,10 @@ We explore how soundtrack album listening is distributed across record labels, f
 """)
 
 st.markdown("""
-Question: How is soundtrack album listening distributed across record labels, and to what extent is label\\-level popularity driven by single breakout titles versus broader catalog performance?
-Visualization: \\(1\\) Stacked bar chart of total album listeners for the top 15 record labels, with each bar decomposed by individual soundtrack albums\\. \\(2\\) Histogram of the share of each label’s total listeners contributed by its most\\-listened\\-to album\\.
+Question: How is soundtrack album listening distributed across record labels, and to what extent is label\\-level popularity driven by single breakout titles versus broader catalog performance?
+
+Visualization: \\(1\\) Stacked bar chart of total album listeners for the top 15 record labels, with each bar decomposed by individual soundtrack albums\\. \\(2\\) Histogram of the share of each label’s total listeners contributed by its most\\-listened\\-to album\\.
+
 """)
 
 # Let's analyze the structure of label names
@@ -971,8 +985,10 @@ For each soundtrack, we measure within\\-album concentration by calculating what
 """)
 
 st.markdown("""
-Question: Within a soundtrack album, is listening spread across tracks, or dominated by a few standouts?
-Visualization: Histogram \\(or density plot\\) of Top\\-1 listening share and/or Top\\-3 listening share across albums\\.
+Question: Within a soundtrack album, is listening spread across tracks, or dominated by a few standouts?
+
+Visualization: Histogram \\(or density plot\\) of Top\\-1 listening share and/or Top\\-3 listening share across albums\\.
+
 """)
 
 album_groups = wide_df.groupby("release_group_id")
@@ -1041,12 +1057,18 @@ Taken together with the earlier rank\\-coherence results, this analysis shows th
 """)
 
 st.markdown("""
-Implications / Directions for Further Exploration:
-\\- Use listening concentration \\(e\\.g\\., Top\\-1 / Top\\-3 share\\) as a simple way to distinguish between “hit\\-driven” soundtracks and more ensemble\\-style albums\\.
-\\- Look at whether hit\\-driven soundtracks tend to be tied to bigger or more commercially visible films, versus ensemble soundtracks that may behave differently\\.
-\\- Check if certain kinds of soundtracks \\(e\\.g\\., orchestral scores vs pop\\-heavy albums\\) consistently show different listening patterns\\.
-\\- Explore whether the relationship between film popularity and soundtrack popularity looks different depending on how listening is distributed within the album\\.
-\\- Treat listening structure as a potential input for clustering soundtracks into a small number of recognizable consumption patterns\\.
+Implications / Directions for Further Exploration:
+
+\\- Use listening concentration \\(e\\.g\\., Top\\-1 / Top\\-3 share\\) as a simple way to distinguish between “hit\\-driven” soundtracks and more ensemble\\-style albums\\.
+
+\\- Look at whether hit\\-driven soundtracks tend to be tied to bigger or more commercially visible films, versus ensemble soundtracks that may behave differently\\.
+
+\\- Check if certain kinds of soundtracks \\(e\\.g\\., orchestral scores vs pop\\-heavy albums\\) consistently show different listening patterns\\.
+
+\\- Explore whether the relationship between film popularity and soundtrack popularity looks different depending on how listening is distributed within the album\\.
+
+\\- Treat listening structure as a potential input for clustering soundtracks into a small number of recognizable consumption patterns\\.
+
 """)
 
 st.markdown("""
@@ -1058,12 +1080,17 @@ st.markdown("""
 """)
 
 st.markdown("""
-We'll do another analysis of popularity that goes a bit deeper compared to what we did earlier\\. What album\\-level popularity is actually reflecting by comparing it to different summaries of track popularity \\(best track vs typical track\\), so we can tell whether albums “win” because of one breakout or because multiple tracks carry weight\\.
+
+We'll do another analysis of popularity that goes a bit deeper compared to what we did earlier\\. What album\\-level popularity is actually reflecting by comparing it to different summaries of track popularity \\(best track vs typical track\\), so we can tell whether albums “win” because of one breakout or because multiple tracks carry weight\\.
+
 """)
 
 st.markdown("""
-Question: Which track\\-level summary lines up best with album\\-level popularity: max, mean, or median track popularity?
-Visualization: Three scatterplots: log\\(album popularity\\) vs log\\(max track popularity\\); log\\(album popularity\\) vs log\\(mean track popularity\\); log\\(album popularity\\) vs log\\(median track popularity\\)\\.
+Question: Which track\\-level summary lines up best with album\\-level popularity: max, mean, or median track popularity?
+
+Visualization:
+ Three scatterplots: log\\(album popularity\\) vs log\\(max track popularity\\); log\\(album popularity\\) vs log\\(mean track popularity\\); log\\(album popularity\\) vs log\\(median track popularity\\)\\.
+
 """)
 
 # ------------------------------------------------------------
@@ -1217,10 +1244,14 @@ Findings: Album popularity is only moderately associated with track\\-level popu
 """)
 
 st.markdown("""
-Implications / Directions for Further Exploration:
-\\- Album popularity should be modeled directly, rather than treated as a straightforward aggregation of track\\-level performance\\.
-\\- Explanatory power is likely to come from album\\- and film\\-level context \\(e\\.g\\., film popularity, release timing\\), rather than from track\\-level summaries alone\\.
-\\- Track\\-level metrics may be better suited for describing internal listening structure within albums, while album\\-level outcomes require separate analysis\\.
+Implications / Directions for Further Exploration:
+
+\\- Album popularity should be modeled directly, rather than treated as a straightforward aggregation of track\\-level performance\\.
+
+\\- Explanatory power is likely to come from album\\- and film\\-level context \\(e\\.g\\., film popularity, release timing\\), rather than from track\\-level summaries alone\\.
+
+\\- Track\\-level metrics may be better suited for describing internal listening structure within albums, while album\\-level outcomes require separate analysis\\.
+
 """)
 
 st.markdown("""
@@ -1236,8 +1267,12 @@ Next, let's check whether track ordering alone correlates with listening, becaus
 """)
 
 st.markdown("""
-Question: Do earlier track positions tend to have higher popularity than later positions?
-Visualization: Line plot of median log track popularity by track number\\.
+
+Question: Do earlier track positions tend to have higher popularity than later positions?
+
+Visualization:
+ Line plot of median log track popularity by track number\\.
+
 """)
 
 import pandas as pd

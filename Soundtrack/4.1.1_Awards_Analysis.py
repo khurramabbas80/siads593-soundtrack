@@ -8,6 +8,12 @@ st.set_page_config(page_title="4.1.1 Awards Analysis", layout="wide")
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 # Standard library imports
 import re
@@ -90,7 +96,7 @@ def calculate_award_flags(matches):
 # ==========================================================
 # 3. GLOBAL SETUP
 # ==========================================================
-awards_df = pd.read_csv('/work/pipeline/4.1.All_Awards_2015_2025.csv')
+awards_df = pd.read_csv('./pipeline/4.1.All_Awards_2015_2025.csv')
 awards_df['Film_Key'] = awards_df['Film'].apply(robust_normalize)
 awards_df['Nominee_Key'] = awards_df['Nominee'].fillna('').str.lower().str.strip()
 
@@ -100,50 +106,50 @@ awards_df['Nominee_Key'] = awards_df['Nominee'].fillna('').str.lower().str.strip
 
 # --- LEVEL 1: ARTISTS ---
 print("Processing Artists...")
-artists_df = pd.read_csv('/work/pipeline/3.7.Artists_composer_analysis.csv')
+artists_df = pd.read_csv('./pipeline/3.7.Artists_composer_analysis.csv')
 artist_results = artists_df.apply(lambda r: calculate_award_flags(
     awards_df[awards_df['Nominee_Key'].str.contains(str(r['name']).lower().strip(), na=False, regex=False)]
 ), axis=1)
-pd.concat([artists_df, artist_results], axis=1).to_csv('/work/pipeline/4.1.1.Artists_awards_appended.csv', index=False)
+pd.concat([artists_df, artist_results], axis=1).to_csv('./pipeline/4.1.1.Artists_awards_appended.csv', index=False)
 
 # --- LEVEL 2: ALBUMS ---
 print("Processing Albums...")
-albums_df = pd.read_csv('/work/pipeline/3.7.Albums_composer_analysis.csv')
+albums_df = pd.read_csv('./pipeline/3.7.Albums_composer_analysis.csv')
 album_results = albums_df.apply(lambda r: calculate_award_flags(
     awards_df[awards_df['Film_Key'] == robust_normalize(r['film_title'])]
 ), axis=1)
-pd.concat([albums_df, album_results], axis=1).to_csv('/work/pipeline/4.1.1.Albums_awards_appended.csv', index=False)
+pd.concat([albums_df, album_results], axis=1).to_csv('./pipeline/4.1.1.Albums_awards_appended.csv', index=False)
 
 # --- LEVEL 3: TRACKS ---
 print("Processing Tracks...")
-tracks_df = pd.read_csv('/work/pipeline/3.7.Tracks_composer_analysis.csv')
+tracks_df = pd.read_csv('./pipeline/3.7.Tracks_composer_analysis.csv')
 # Tracks match based on the film they belong to
 track_results = tracks_df.apply(lambda r: calculate_award_flags(
     awards_df[awards_df['Film_Key'] == robust_normalize(r['film_title'])]
 ), axis=1)
-pd.concat([tracks_df, track_results], axis=1).to_csv('/work/pipeline/4.1.1.Tracks_awards_appended.csv', index=False)
+pd.concat([tracks_df, track_results], axis=1).to_csv('./pipeline/4.1.1.Tracks_awards_appended.csv', index=False)
 
 # --- LEVEL 4: WIDE FILE ---
 print("Processing Wide File...")
-wide_df = pd.read_csv('/work/pipeline/3.7.Wide_composer_analysis.csv')
+wide_df = pd.read_csv('./pipeline/3.7.Wide_composer_analysis.csv')
 wide_results = wide_df.apply(lambda r: calculate_award_flags(
     awards_df[
         (awards_df['Film_Key'] == robust_normalize(r['film_title'])) |
         (awards_df['Nominee_Key'].str.contains(str(r['recording_artist_credit']).lower().strip(), na=False, regex=False))
     ]
 ), axis=1)
-pd.concat([wide_df, wide_results], axis=1).to_csv('/work/pipeline/4.1.1.Wide_awards_appended.csv', index=False)
+pd.concat([wide_df, wide_results], axis=1).to_csv('./pipeline/4.1.1.Wide_awards_appended.csv', index=False)
 
-print("Done! All 4 files saved to /work/pipeline/ with suffix 4.1.1")
+print("Done! All 4 files saved to ./pipeline/ with suffix 4.1.1")
 
 import pandas as pd
 
 # Paths to the generated files
 files = {
-    "Artists": "/work/pipeline/4.1.1.Artists_awards_appended.csv",
-    "Albums": "/work/pipeline/4.1.1.Albums_awards_appended.csv",
-    "Tracks": "/work/pipeline/4.1.1.Tracks_awards_appended.csv",
-    "Wide": "/work/pipeline/4.1.1.Wide_awards_appended.csv"
+    "Artists": "./pipeline/4.1.1.Artists_awards_appended.csv",
+    "Albums": "./pipeline/4.1.1.Albums_awards_appended.csv",
+    "Tracks": "./pipeline/4.1.1.Tracks_awards_appended.csv",
+    "Wide": "./pipeline/4.1.1.Wide_awards_appended.csv"
 }
 
 # The specific films we want to verify are now matching

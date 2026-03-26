@@ -8,6 +8,12 @@ st.set_page_config(page_title="1.1 TMDB API Spine Extraction", layout="wide")
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 st.markdown("""
 # 1\\.1 — TMDB API Spine Extraction \\(2015–2025\\)
@@ -18,7 +24,7 @@ st.markdown("""
 """)
 
 st.markdown("""
-This notebook extracts a film\\-level “spine” from the TMDB API for releases from 2015–2025 and writes the results to a versioned CSV artifact: \\`/work/pipeline/1\\.1\\.TMDB 2015\\-2025\\.csv\\`
+This notebook extracts a film\\-level “spine” from the TMDB API for releases from 2015–2025 and writes the results to a versioned CSV artifact: \\`./pipeline/1\\.1\\.TMDB 2015\\-2025\\.csv\\`
 """)
 
 st.markdown("""
@@ -30,22 +36,30 @@ st.markdown("""
 """)
 
 st.markdown("""
-Primary artifact
-\\- \\`/work/pipeline/1\\.1\\.TMDB 2015\\-2025\\.csv\\`
+Primary artifact
+
+\\- \\`./pipeline/1\\.1\\.TMDB 2015\\-2025\\.csv\\`
 """)
 
 st.markdown("""
-Grain
+Grain
+
 \\- One row per TMDB film ID \\(movie\\)
 """)
 
 st.markdown("""
-Fields included \\(high level\\)
-\\- Film identifiers \\+ titles \\(TMDB ID, title, original title, language\\)
-\\- Release metadata \\(year, release date, MPAA rating when available\\)
-\\- Popularity \\+ engagement proxies \\(popularity, vote average, vote count\\)
-\\- Production metadata \\(countries, studios, budget, revenue, runtime, genres\\)
-\\- Key people fields \\(director, “Original Music Composer” if present, top cast\\)
+Fields included \\(high level\\)
+
+\\- Film identifiers \\+ titles \\(TMDB ID, title, original title, language\\)
+
+\\- Release metadata \\(year, release date, MPAA rating when available\\)
+
+\\- Popularity \\+ engagement proxies \\(popularity, vote average, vote count\\)
+
+\\- Production metadata \\(countries, studios, budget, revenue, runtime, genres\\)
+
+\\- Key people fields \\(director, “Original Music Composer” if present, top cast\\)
+
 \\- Limited keywords \\+ external IDs \\(IMDb ID, Wikidata ID\\)
 """)
 
@@ -54,31 +68,44 @@ st.markdown("""
 """)
 
 st.markdown("""
-Authentication
-\\- Reads \\`TMDB\\_TOKEN\\` from your \\`\\.env\\` file and uses it as a Bearer token\\.
+Authentication
+
+\\- Reads \\`TMDB\\_TOKEN\\` from your \\`\\.env\\` file and uses it as a Bearer token\\.
+
 \\- If the token is missing, the notebook intentionally fails fast\\.
 """)
 
 st.markdown("""
-Discovery \\(per year\\)
-\\- Uses \\`/discover/movie\\` and paginates up to 500 pages, sorted by \\`popularity\\.desc\\`\\.
-\\- Applies \\`vote\\_count\\.gte = 10\\` as a minimum activity threshold\\.
+Discovery \\(per year\\)
+
+\\- Uses \\`/discover/movie\\` and paginates up to 500 pages, sorted by \\`popularity\\.desc\\`\\.
+
+\\- Applies \\`vote\\_count\\.gte = 10\\` as a minimum activity threshold\\.
+
 \\- \\`include\\_adult = true\\` \\(adult titles are included by design for completeness\\)\\.
 """)
 
 st.markdown("""
-Details expansion \\(per movie ID\\)
-\\- Fetches \\`/movie/\\{id\\}\\` with \\`append\\_to\\_response=credits,keywords,release\\_dates,external\\_ids\\`
-\\- Parses:
-  \\- Director\\(s\\) from crew where \\`job == "Director"\\`
-  \\- Composer\\(s\\) from crew where \\`job == "Original Music Composer"\\`
-  \\- Top 5 cast members
+Details expansion \\(per movie ID\\)
+
+\\- Fetches \\`/movie/\\{id\\}\\` with \\`append\\_to\\_response=credits,keywords,release\\_dates,external\\_ids\\`
+
+\\- Parses:
+
+  \\- Director\\(s\\) from crew where \\`job == "Director"\\`
+
+  \\- Composer\\(s\\) from crew where \\`job == "Original Music Composer"\\`
+
+  \\- Top 5 cast members
+
   \\- MPAA rating from US release dates when available; otherwise \\`NR\\`
 """)
 
 st.markdown("""
-Rate limiting \\+ resilience
-\\- On TMDB rate limit \\(HTTP 429\\), the notebook pauses and retries\\.
+Rate limiting \\+ resilience
+
+\\- On TMDB rate limit \\(HTTP 429\\), the notebook pauses and retries\\.
+
 \\- Output is appended incrementally to CSV; the notebook is safe to stop and resume\\.
 """)
 
@@ -91,7 +118,8 @@ This notebook supports resume mode:
 """)
 
 st.markdown("""
-\\- If the CSV already exists, it reads the file and collects existing TMDB IDs\\.
+\\- If the CSV already exists, it reads the file and collects existing TMDB IDs\\.
+
 \\- It then skips IDs already written and only pulls “new” titles\\.
 """)
 
@@ -112,8 +140,10 @@ Instead, it is imported into Postgres as a staging table \\(layered on top of th
 """)
 
 st.markdown("""
-1\\. Run this notebook to generate \\`/work/pipeline/1\\.1\\.TMDB 2015\\-2025\\.csv\\`
-2\\. Upload/import the CSV via DBeaver into the TMDB staging table
+1\\. Run this notebook to generate \\`./pipeline/1\\.1\\.TMDB 2015\\-2025\\.csv\\`
+
+2\\. Upload/import the CSV via DBeaver into the TMDB staging table
+
 3\\. Use SQL to join TMDB films to MusicBrainz release groups and build the film–album spine
 """)
 
@@ -126,9 +156,12 @@ st.markdown("""
 """)
 
 st.markdown("""
-\\- TMDB attributes like popularity and vote counts can drift over time\\.
-\\- If this notebook is re\\-run at a later date, results may not match exactly unless the artifact CSV is treated as the frozen input\\.
-\\- For reproducibility, treat the committed CSV as the authoritative snapshot used in downstream work\\.
+\\- TMDB attributes like popularity and vote counts can drift over time\\.
+
+\\- If this notebook is re\\-run at a later date, results may not match exactly unless the artifact CSV is treated as the frozen input\\.
+
+\\- For reproducibility, treat the committed CSV as the authoritative snapshot used in downstream work\\.
+
 """)
 
 import csv
@@ -147,7 +180,7 @@ if not ACCESS_TOKEN:
     raise ValueError("API Token missing! Ensure TMDB_TOKEN is in your .env file.")
 
 BASE_URL = "https://api.themoviedb.org/3"
-FILENAME = "/work/pipeline/1.1.TMDB 2015-2025.csv"
+FILENAME = "./pipeline/1.1.TMDB 2015-2025.csv"
 START_YEAR = 2015
 END_YEAR = 2025
 

@@ -8,6 +8,12 @@ st.set_page_config(page_title="4.4 Rapid API (Soundnet) Pull", layout="wide")
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 # Standard library imports
 import json
@@ -20,7 +26,7 @@ import pandas as pd
 import requests
 from tqdm.auto import tqdm
 
-filepath = '/work/pipeline/4.3.Wide_spotify_ids.csv'
+filepath = './pipeline/4.3.Wide_spotify_ids.csv'
 df_wide = pd.read_csv(filepath)
 df_wide.head()
 
@@ -878,13 +884,13 @@ except Exception:
 
 # Save wide file to CSV
 
-out_path = "/work/pipeline/4.4.Wide_rapid_api_pull.csv"
+out_path = "./pipeline/4.4.Wide_rapid_api_pull.csv"
 
 df_wide.to_csv(out_path, index=False)
 
 # Check track file
 
-filepath = '/work/pipeline/4.3.Tracks_spotify_ids.csv'
+filepath = './pipeline/4.3.Tracks_spotify_ids.csv'
 df_track = pd.read_csv(filepath)
 
 print(f"Number of records in track file before merge: {len(df_track)}")
@@ -961,7 +967,7 @@ except Exception:
 
 # Save track file to CSV
 
-out_path = "/work/pipeline/4.4.Tracks_rapid_api_pull.csv"
+out_path = "./pipeline/4.4.Tracks_rapid_api_pull.csv"
 
 df_track.to_csv(out_path, index=False)
 

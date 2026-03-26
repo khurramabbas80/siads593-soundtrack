@@ -8,6 +8,12 @@ st.set_page_config(page_title="3.8 QA gate_ Cleansed spine sanity check", layout
 # Adjust DATA_DIR if you deploy with a different layout.
 # ---------------------------------------------------------------------------
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(DATA_DIR)
+# Ensure repo root is on path so utils/ can be imported from any subdirectory
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+if DATA_DIR not in sys.path:
+    sys.path.insert(0, DATA_DIR)
 
 st.markdown("""
 # I\\. Overview
@@ -35,38 +41,58 @@ What this notebook should cover
 """)
 
 st.markdown("""
-1\\. Integrity impact of cleansing steps \\(3\\.2–3\\.3\\)
-\\- Quantify before/after row counts at the album level to understand the impact of cleansing\\.
-\\- Summarize high\\-level categories of dropped rows \\(e\\.g\\., unofficial releases, duplicate or conflicting album–film matches\\)\\.
-\\- Confirm that overall coverage remains healthy after cleansing \\(films with ≥1 album, albums per film, tracks per album\\)\\.
+1\\. Integrity impact of cleansing steps \\(3\\.2–3\\.3\\)
+
+\\- Quantify before/after row counts at the album level to understand the impact of cleansing\\.
+
+\\- Summarize high\\-level categories of dropped rows \\(e\\.g\\., unofficial releases, duplicate or conflicting album–film matches\\)\\.
+
+\\- Confirm that overall coverage remains healthy after cleansing \\(films with ≥1 album, albums per film, tracks per album\\)\\.
+
 """)
 
 st.markdown("""
-2\\. Spine invariants and uniqueness guarantees
-\\- Confirm that no album is linked to more than one film after cleansing\\.
-\\- Confirm there are no duplicate \\(tmdb\\_id, release\\_group\\_id\\) pairs in the spine\\.
-\\- Confirm that spine keys are stable and uniquely identify rows post\\-cleansing\\.
+2\\. Spine invariants and uniqueness guarantees
+
+\\- Confirm that no album is linked to more than one film after cleansing\\.
+
+\\- Confirm there are no duplicate \\(tmdb\\_id, release\\_group\\_id\\) pairs in the spine\\.
+
+\\- Confirm that spine keys are stable and uniquely identify rows post\\-cleansing\\.
+
 """)
 
 st.markdown("""
-3\\. Canonical soundtrack flag behavior \\(3\\.4\\)
-\\- Confirm that each film has exactly one canonical soundtrack\\.
-\\- Confirm that no films have zero or multiple canonical soundtracks\\.
-\\- Review the distribution of candidate albums per film relative to the canonical selection to ensure coherent behavior\\.
+3\\. Canonical soundtrack flag behavior \\(3\\.4\\)
+
+\\- Confirm that each film has exactly one canonical soundtrack\\.
+
+\\- Confirm that no films have zero or multiple canonical soundtracks\\.
+
+\\- Review the distribution of candidate albums per film relative to the canonical selection to ensure coherent behavior\\.
+
 """)
 
 st.markdown("""
-4\\. Genre & Composer sanity \\(3\\.5–3\\.7\\)
-\\- Confirm that genre explosion did not unintentionally distort the spine\\.
-\\- Confirm that composer\\_primary\\_clean is populated for TMDB rows where film\\_soundtrack\\_composer\\_raw = 'Unknown', except when MusicBrainz only provides 'Various Artists'\\.
-\\- Confirm that MusicBrainz\\-based composer recovery is deterministic, using the position = 0 credited artist per tmdb\\_id \\(excluding 'Various Artists'\\), with no duplication\\-induced drift\\.
+4\\. Genre & Composer sanity \\(3\\.5–3\\.7\\)
+
+\\- Confirm that genre explosion did not unintentionally distort the spine\\.
+
+\\- Confirm that composer\\_primary\\_clean is populated for TMDB rows where film\\_soundtrack\\_composer\\_raw = 'Unknown', except when MusicBrainz only provides 'Various Artists'\\.
+
+\\- Confirm that MusicBrainz\\-based composer recovery is deterministic, using the position = 0 credited artist per tmdb\\_id \\(excluding 'Various Artists'\\), with no duplication\\-induced drift\\.
+
 """)
 
 st.markdown("""
-5\\. Scoping impact preview via flags \\(3\\.6\\)
-\\- Confirm coverage of vote\\_count \\> 500 films by year and in aggregate\\.
-\\- Confirm overlap between vote\\_count \\> 500 films and canonical soundtrack coverage\\.
-\\- Preview the size and basic characteristics of the universe that would remain if scoping were enforced\\.
+5\\. Scoping impact preview via flags \\(3\\.6\\)
+
+\\- Confirm coverage of vote\\_count \\> 500 films by year and in aggregate\\.
+
+\\- Confirm overlap between vote\\_count \\> 500 films and canonical soundtrack coverage\\.
+
+\\- Preview the size and basic characteristics of the universe that would remain if scoping were enforced\\.
+
 """)
 
 st.markdown("""
