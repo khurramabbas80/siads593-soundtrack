@@ -757,12 +757,7 @@ labels_df["y_label"] = labels_df["y0"] + LABEL_Y_OFFSET
 st.dataframe(labels_df)
 
 baselines = alt.Chart(labels_df).mark_rule(opacity=0.15).encode(y="y_label:Q")
-combo_2 = (baselines + labels_only + ridges_only)
-# auto-detected possible Altair chart: combo_2
-try:
-    st.altair_chart(combo_2, use_container_width=True)
-except Exception:
-    st.write(combo_2)
+# combo_2 skipped: labels_only / ridges_only were never defined in the original notebook
 
 st.markdown("""
 STEP 4 — Assemble the final ridgeline chart
